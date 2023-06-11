@@ -12,12 +12,14 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "netbox-dsl-vscode.helloWorld",
-        "title": "Hello World"
-      }
-    ]
+     "views": {
+      "explorer": [
+        {
+          "id": "netboxTree",
+          "name": "Netbox"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
