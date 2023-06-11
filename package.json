@@ -12,11 +12,22 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "commands": [
+			{
+				"command": "netbox.VisualizeObject",
+				"title": "View Netbox Object"
+			}
+    ],
      "views": {
       "explorer": [
         {
           "id": "netboxTree",
           "name": "Netbox"
+        },
+        {
+          "type": "webview",
+          "id": "netbox.objectView",
+          "name": "Netbox Object View"
         }
       ]
     }

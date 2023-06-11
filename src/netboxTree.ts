@@ -1,17 +1,11 @@
 import path = require('path');
 import * as vscode from 'vscode';
+import { NetboxObjectViewProvider } from './netboxObjectView';
 
-export class NetboxTreeProvider implements vscode.TreeDataProvider<NetboxTreeItem> {
+export class NetboxTreeDataProvider implements vscode.TreeDataProvider<NetboxTreeItem> {
 
     private _onDidChangeTreeData: vscode.EventEmitter<NetboxTreeItem | undefined | void> = new vscode.EventEmitter<NetboxTreeItem | undefined | void>();
     readonly onDidChangeTreeData: vscode.Event<NetboxTreeItem | undefined | void> = this._onDidChangeTreeData.event;
-
-    data: NetboxTreeItem;
-
-    constructor(private workspaceRoot: string | undefined) {
-        this.workspaceRoot = workspaceRoot;
-        this.data = new NetboxTreeItem("netbox.cie.comcast.net", "server", vscode.TreeItemCollapsibleState.Expanded);
-    }
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
@@ -22,16 +16,48 @@ export class NetboxTreeProvider implements vscode.TreeDataProvider<NetboxTreeIte
     }
 
     getChildren(element?: NetboxTreeItem): NetboxTreeItem[] | Thenable<NetboxTreeItem[]> {
-        if (!this.workspaceRoot) {
-            vscode.window.showInformationMessage('No netbox objects in empty workspace');
-            return Promise.resolve([]);
-        }
         if (element === undefined) {
-            return Promise.resolve([this.data]); 
+            return Promise.resolve([new NetboxTreeItem("netbox.cie.comcast.net", "server", vscode.TreeItemCollapsibleState.Collapsed)]); 
         }
         return Promise.resolve([new NetboxTreeItem("Comcast East", "region", vscode.TreeItemCollapsibleState.None)]);
        
     }
+
+    showWebViewPanel(selection: NetboxTreeItem) {
+        const panel = vscode.window.createWebviewPanel(
+            NetboxObjectViewProvider.viewType,
+            `Netbox Object Details: ${selection.label}`,
+            vscode.ViewColumn.One,
+            {}
+          );
+    }
+
+    constructor(context: vscode.ExtensionContext) {
+        const options = {
+            treeDataProvider: this,
+            showCollapseAll: true
+        };
+
+        vscode.window.registerTreeDataProvider('netboxTree', this);
+        const tree = vscode.window.createTreeView('netboxTree', options);
+        context.subscriptions.push(tree);
+
+        // setup: events
+        tree.onDidChangeSelection(e => {
+            console.log(e);
+            this.showWebViewPanel(e.selection[0]);
+        });
+        // tree.onDidCollapseElement(e => {
+        //     console.log(e);
+        // });
+        // tree.onDidChangeVisibility(e => {
+        //     console.log(e);
+        // });
+        // tree.onDidExpandElement(e => {
+        //     console.log(e);
+        // });
+    }
+
 }
 
 export class NetboxTreeItem extends vscode.TreeItem {
