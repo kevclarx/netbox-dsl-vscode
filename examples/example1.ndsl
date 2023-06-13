@@ -1,0 +1,11 @@
+sites {
+  name: Ashburn
+  slug: as
+  region: None
+}
+
+racks {
+  br11: { site: as, region: east, ru: 42, role: rdei-compute, create: true }
+  br122: fetch(name="br121")
+}
+

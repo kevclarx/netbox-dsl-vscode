@@ -12,13 +12,21 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-			{
-				"command": "netbox.VisualizeObject",
-				"title": "View Netbox Object"
-			}
+    "textMateLanguages": [
+      {
+        "scopeName": "source.netboxdsl",
+        "path": "./syntaxes/netboxdsl.tmLanguage.json"
+      }
     ],
-     "views": {
+    "languages": [
+      {
+        "id": "netboxdsl",
+        "aliases": ["Netbox DSL"],
+        "extensions": [".ndsl"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "views": {
       "explorer": [
         {
           "id": "netboxTree",
@@ -30,7 +38,14 @@
           "name": "Netbox Object View"
         }
       ]
-    }
+    },
+    "textDocumentContentProviders": [
+      {
+        "scheme": "netboxdsl",
+        "language": "netboxdsl",
+        "pattern": "**/*.ndsl"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

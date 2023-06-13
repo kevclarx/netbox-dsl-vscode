@@ -1,0 +1,32 @@
+{
+    "comments": {
+        "lineComment": "//",
+        "blockComment": [
+            "/*",
+            "*/"
+        ]
+    },
+    "brackets": [
+        [
+            "{",
+            "}"
+        ]
+    ],
+    "autoClosingPairs": [
+        {
+            "open": "{",
+            "close": "}"
+        }
+    ],
+    "surroundingPairs": [
+        {
+            "open": "{",
+            "close": "}"
+        }
+    ],
+    "indentationRules": {
+        "increaseIndentPattern": "^\\s*(sites|racks)\\s*\\{\\s*$",
+        "decreaseIndentPattern": "^\\s*\\}",
+        "indentNextLinePattern": "^\\s*\"\\w+\"\\s*:\\s*$"
+    }
+}
