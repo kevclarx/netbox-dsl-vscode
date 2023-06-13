@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
 
 export class Lexer {
-    private input: string;
-    private position: number;
-    private currentChar: string | null;
-    private lineNumber: number;
-    private charPosition: number;
+    private input: string; // current document
+    private position: number; // current position in the input string
+    private currentChar: string | null; // current character value at position
+    private lineNumber: number; // current line number
+    private charPosition: number; // position of the current character in the current line
 
     constructor() {
         this.input = "";
@@ -29,7 +29,7 @@ export class Lexer {
         while (this.currentChar !== null && /\s/.test(this.currentChar)) {
             if (this.currentChar === "\n") {
                 this.lineNumber++;
-                this.charPosition = 1;
+                this.charPosition = 0;
             }
             this.advance();
         }
@@ -79,7 +79,8 @@ export class Lexer {
                         parenthesesCount++;
                     } else if (this.currentChar === ")") {
                         parenthesesCount--;
-                    } else {
+                    }
+                    if (parenthesesCount > 0) {
                         filter += this.currentChar;
                     }
                     this.advance();
@@ -105,6 +106,7 @@ export class Lexer {
                     this.currentChar !== null &&
                     (/\w/.test(this.currentChar) || this.currentChar === "-" || this.currentChar === "=")
                 ) {
+
                     identifier += this.currentChar;
                     this.advance();
                 }
@@ -117,7 +119,7 @@ export class Lexer {
                 return token;
             }
             if (this.currentChar === '"') {
-                let stringLiteral = '"';
+                let stringLiteral = "";
                 const startLine = this.lineNumber;
                 const startChar = this.charPosition;
                 this.advance();
@@ -126,7 +128,7 @@ export class Lexer {
                     this.advance();
                 }
                 if (this.currentChar === '"') {
-                    stringLiteral += '"';
+                    // stringLiteral += '"';
                     this.advance();
                     const token: Token = {
                         type: TokenType.String,
@@ -155,7 +157,6 @@ export class Lexer {
             token = this.getNextToken();
         }
         console.log(`finished lexing, found ${tokens.length} tokens`);
-        console.log(tokens);
         return tokens;
     }
 }
@@ -164,9 +165,9 @@ export enum TokenType {
     LeftBrace = "LeftBrace",
     RightBrace = "RightBrace",
     Colon = "Colon",
-    Identifier = "Identifier",
+    Identifier = "Identifier", // a "keyword" the dsl understands
     String = "String",
-    Filter = "Filter",
+    Filter = "Filter", // for now lets assume anything in () is a filter, this may change
 }
 
 export class Token {

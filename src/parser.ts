@@ -2,18 +2,25 @@ import * as vscode from 'vscode';
 import { Lexer, Token, TokenType} from './lexer';
 
 // Example dsl syntax
-//
-// sites: {
-//   name: "Ashburn Data Center"
-//   slug: "as"
-//   region: ""
-// }
+// sites {
+//     as: {
+//       name: "Ashburn NDC"
+//       slug: "as"
+//       region: ""
+//     }
+//   }
+  
+//   racks {
+//     br11: { 
+//       site: "as"
+//       region: "east"
+//       ru: 42
+//       role: "rdei-compute"
+//       create: true 
+//     }
+//     br122: fetch(name='br121')
+//   }
 
-// racks {
-//   br11: { site: as, region: east, ru: 42, role: rdei-compute, create: true }
-//   br120: fetch(name="br120")
-// }
-//
 
 interface ASTNode {
     type: string;
@@ -39,7 +46,7 @@ export class Parser {
     public parseAndDisplay(document: vscode.TextDocument): void {
         console.log("Parsing document");
         let tokens = this.lexer.tokenize(document.getText());
-        console.log(`tokens: ${tokens}`);
+        console.log(tokens);
         // const ast = this.parse();
 
         // Do something with the AST, such as displaying it in the output or using it for further processing

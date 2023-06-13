@@ -1,15 +1,17 @@
 sites {
-  name: Ashburn
-  slug: as
-  region: None
+  as: {
+    name: "Ashburn NDC"
+    slug: "as"
+    region: ""
+  }
 }
 
 racks {
   br11: { 
-    site: as
-    region: east
+    site: "as"
+    region: "east"
     ru: 42
-    role: rdei-compute
+    role: "rdei-compute"
     create: true 
   }
   br122: fetch(name='br121')
