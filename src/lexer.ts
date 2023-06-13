@@ -39,7 +39,7 @@ export class Lexer {
         while (this.currentChar !== null) {
             if (this.currentChar === "{") {
                 const token: Token = {
-                    type: TokenType.LeftBrace,
+                    type: TokenType.leftBrace,
                     value: "{",
                     line: this.lineNumber,
                     char: this.charPosition,
@@ -49,7 +49,7 @@ export class Lexer {
             }
             if (this.currentChar === "}") {
                 const token: Token = {
-                    type: TokenType.RightBrace,
+                    type: TokenType.rightBrace,
                     value: "}",
                     line: this.lineNumber,
                     char: this.charPosition,
@@ -59,7 +59,7 @@ export class Lexer {
             }
             if (this.currentChar === ":") {
                 const token: Token = {
-                    type: TokenType.Colon,
+                    type: TokenType.colon,
                     value: ":",
                     line: this.lineNumber,
                     char: this.charPosition,
@@ -91,7 +91,7 @@ export class Lexer {
                 }
 
                 const token: Token = {
-                    type: TokenType.Filter,
+                    type: TokenType.filter,
                     value: filter,
                     line: startLine,
                     char: startChar,
@@ -111,7 +111,7 @@ export class Lexer {
                     this.advance();
                 }
                 const token: Token = {
-                    type: TokenType.Identifier,
+                    type: TokenType.identifier,
                     value: identifier,
                     line: startLine,
                     char: startChar,
@@ -131,7 +131,7 @@ export class Lexer {
                     // stringLiteral += '"';
                     this.advance();
                     const token: Token = {
-                        type: TokenType.String,
+                        type: TokenType.string,
                         value: stringLiteral,
                         line: startLine,
                         char: startChar,
@@ -162,12 +162,12 @@ export class Lexer {
 }
 
 export enum TokenType {
-    LeftBrace = "LeftBrace",
-    RightBrace = "RightBrace",
-    Colon = "Colon",
-    Identifier = "Identifier", // a "keyword" the dsl understands
-    String = "String",
-    Filter = "Filter", // for now lets assume anything in () is a filter, this may change
+    leftBrace = "LeftBrace",
+    rightBrace = "RightBrace",
+    colon = "Colon",
+    identifier = "Identifier", // a "keyword" the dsl understands
+    string = "String",
+    filter = "Filter", // for now lets assume anything in () is a filter, this may change
 }
 
 export class Token {
