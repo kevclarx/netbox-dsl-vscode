@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import { NetboxTreeDataProvider } from './treeview';
-import { NetboxObjectViewProvider } from './webview';
+// import { NetboxObjectViewProvider } from './webview';
 import { Parser } from './parser';
 import { Lexer, Token } from './lexer';
 import { symbols } from './symbols';
@@ -13,10 +13,10 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log('extension netbox-dsl is now active');
 
 	// WebView
-	const netboxObjectViewProvider = new NetboxObjectViewProvider(context.extensionUri);
-	context.subscriptions.push(
-		vscode.window.registerWebviewViewProvider(NetboxObjectViewProvider.viewType, netboxObjectViewProvider)
-	);
+	// const netboxObjectViewProvider = new NetboxObjectViewProvider(context.extensionUri);
+	// context.subscriptions.push(
+	// 	vscode.window.registerWebviewViewProvider(NetboxObjectViewProvider.viewType, netboxObjectViewProvider)
+	// );
 
 	// TreeView
 	new NetboxTreeDataProvider(context);
