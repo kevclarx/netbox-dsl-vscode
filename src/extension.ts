@@ -4,6 +4,7 @@ import { NetboxTreeDataProvider } from './treeview';
 import { NetboxObjectViewProvider } from './webview';
 import { Parser } from './parser';
 import { Lexer, Token } from './lexer';
+import { symbols } from './symbols';
 
 
 // This method is called when your extension is activated
@@ -34,6 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
 			if (e instanceof Error) { message = e.message; }
 			console.log(message);
 		}
+		console.log(symbols);
 	}
 }
 

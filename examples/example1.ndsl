@@ -15,5 +15,5 @@ racks {
     role: "rdei-compute"
     create: "true"
   }
-  br122: fetch(name="br122" site=$as)
+  br122 { fetch(name="br122" site=$as) }
 }

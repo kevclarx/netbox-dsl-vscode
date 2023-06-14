@@ -44,7 +44,7 @@ export class NetboxTreeDataProvider implements vscode.TreeDataProvider<NetboxTre
         // setup: events
         tree.onDidChangeSelection(e => {
             console.log(e);
-            this.showWebViewPanel(e.selection[0]);
+            this.showWebViewPanel(e.selection[0]); 
         });
         // tree.onDidCollapseElement(e => {
         //     console.log(e);

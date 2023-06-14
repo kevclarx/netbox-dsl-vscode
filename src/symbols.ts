@@ -2,21 +2,29 @@ import { RackModel, SiteModel } from "./models";
 
 
 class SymbolTable {
-    private table: Map<string, string>;
+    private sitesMap: Map<string, SiteModel>;
+    private racksMap: Map<string, RackModel>;
 
     constructor() {
-        this.table = new Map();
+        this.sitesMap = new Map<string,SiteModel>();
+        this.racksMap = new Map<string,RackModel>();
     }
 
-    public addSiteReference(name: string, slug: string): void {
-        this.table.set(name, slug);
+    public addSite(symbol: string, site: SiteModel): void {
+        this.sitesMap.set(symbol, site);
     }
 
-    public getSiteSlug(name: string): string | undefined {
-        return this.table.get(name);
+    public getSite(symbol: string): SiteModel | undefined {
+        return this.sitesMap.get(symbol);
     }
 
+    public addRack(symbol: string, rack: RackModel): void {
+        this.racksMap.set(symbol, rack);
+    }
+
+    public getRack(symbol: string): RackModel | undefined {
+        return this.racksMap.get(symbol);
+    }
 }
 
-var siteSymbols: Record<string, SiteModel>;
-var rackSymbols: Record<string, RackModel>;
+export var symbols: SymbolTable = new SymbolTable();
