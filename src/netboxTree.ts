@@ -20,7 +20,6 @@ export class NetboxTreeDataProvider implements vscode.TreeDataProvider<NetboxTre
             return Promise.resolve([new NetboxTreeItem("netbox.cie.comcast.net", "server", vscode.TreeItemCollapsibleState.Collapsed)]); 
         }
         return Promise.resolve([new NetboxTreeItem("Comcast East", "region", vscode.TreeItemCollapsibleState.None)]);
-       
     }
 
     showWebViewPanel(selection: NetboxTreeItem) {

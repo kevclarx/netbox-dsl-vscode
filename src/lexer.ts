@@ -15,6 +15,7 @@ export class Lexer {
         this.charPosition = 1;
     }
 
+    // advance the position pointer and set the currentChar
     private advance(): void {
         this.position++;
         this.charPosition++;
@@ -25,6 +26,7 @@ export class Lexer {
         }
     }
 
+    // skip whitespace characters
     private skipWhitespace(): void {
         while (this.currentChar !== null && /\s/.test(this.currentChar)) {
             if (this.currentChar === "\n") {
@@ -35,6 +37,7 @@ export class Lexer {
         }
     }
 
+    // return the next token in the input string
     private getNextToken(): Token | null {
         while (this.currentChar !== null) {
             if (this.currentChar === "{") {
@@ -87,7 +90,7 @@ export class Lexer {
                 }
 
                 if (parenthesesCount !== 0) {
-                    throw new SyntaxError("Unbalanced parentheses in filter");
+                    throw new SyntaxError(`lexer: Unbalanced parentheses in filter at line ${this.lineNumber} char ${this.charPosition}`);
                 }
 
                 const token: Token = {
@@ -138,18 +141,20 @@ export class Lexer {
                     };
                     return token;
                 } else {
-                    throw new SyntaxError("Unterminated string literal");
+                    throw new SyntaxError(`lexer: Unterminated string literal at line ${this.lineNumber} char ${this.charPosition}`);
                 }
             }
-            throw new SyntaxError(`Unexpected character: ${this.currentChar}`);
+            throw new SyntaxError(`lexer: Unexpected character: ${this.currentChar} at line ${this.lineNumber} char ${this.charPosition}`);
         }
         return null;
     }
 
+    // tokenize the input string
     tokenize(input: string): Token[] {
         this.input = input;
         this.currentChar = this.input.charAt(0);
         const tokens: Token[] = [];
+        this.skipWhitespace();
         let token = this.getNextToken();
         while (token !== null) {
             tokens.push(token);
@@ -161,15 +166,19 @@ export class Lexer {
     }
 }
 
-export enum TokenType {
-    leftBrace = "LeftBrace",
-    rightBrace = "RightBrace",
-    colon = "Colon",
-    identifier = "Identifier", // a "keyword" the dsl understands
-    string = "String",
-    filter = "Filter", // for now lets assume anything in () is a filter, this may change
-}
+// using a static class instead of enum here because TS cannot seem to infer proper types in parser otherwise
+export class TokenType {
+    public static readonly leftBrace = new TokenType("{");
+    public static readonly rightBrace = new TokenType("}");
+    public static readonly colon = new TokenType(":");
+    public static readonly identifier = new TokenType("Identifier");
+    public static readonly string = new TokenType("String");
+    public static readonly filter = new TokenType("Filter");
+  
+    private constructor(public readonly value: string) {}
+  }
 
+// a token is a single "word" in the dsl
 export class Token {
     type: TokenType;
     value: string;
