@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
-import { NetboxTreeDataProvider } from './netboxTree';
-import { NetboxObjectViewProvider } from './netboxObjectView';
+import { NetboxTreeDataProvider } from './treeview';
+import { NetboxObjectViewProvider } from './webview';
 import { Parser } from './parser';
 import { Lexer, Token } from './lexer';
 

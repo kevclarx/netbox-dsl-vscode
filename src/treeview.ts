@@ -1,6 +1,6 @@
 import path = require('path');
 import * as vscode from 'vscode';
-import { NetboxObjectViewProvider } from './netboxObjectView';
+import { NetboxObjectViewProvider } from './webview';
 
 export class NetboxTreeDataProvider implements vscode.TreeDataProvider<NetboxTreeItem> {
 

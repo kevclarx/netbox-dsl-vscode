@@ -101,6 +101,25 @@ export class Lexer {
                 };
                 return token;
             }
+            if (this.currentChar === "$") {
+                let reference = "";
+                const startLine = this.lineNumber;
+                const startChar = this.charPosition;
+                while (
+                    this.currentChar !== null &&
+                    (/\w/.test(this.currentChar)  || this.currentChar === "$")
+                ) {
+                    reference += this.currentChar;
+                    this.advance();
+                }
+                const token: Token = {
+                    type: TokenType.reference,
+                    value: reference,
+                    line: startLine,
+                    char: startChar,
+                };
+                return token;
+            }
             if (/\w/.test(this.currentChar)) {
                 let identifier = "";
                 const startLine = this.lineNumber;
@@ -109,7 +128,6 @@ export class Lexer {
                     this.currentChar !== null &&
                     (/\w/.test(this.currentChar) || this.currentChar === "-" || this.currentChar === "=")
                 ) {
-
                     identifier += this.currentChar;
                     this.advance();
                 }
@@ -172,6 +190,7 @@ export class TokenType {
     public static readonly rightBrace = new TokenType("}");
     public static readonly colon = new TokenType(":");
     public static readonly identifier = new TokenType("Identifier");
+    public static readonly reference = new TokenType("Reference");
     public static readonly string = new TokenType("String");
     public static readonly filter = new TokenType("Filter");
   
