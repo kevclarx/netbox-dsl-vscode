@@ -34,8 +34,9 @@ export class NetboxTreeDataProvider implements vscode.TreeDataProvider<NetboxTre
           );
 
           const styleMainUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, 'media', 'main.css'));
-          panel.webview.html = getWebviewContent(styleMainUri);
-          panel.webview.postMessage({name: "jermaine"});
+          const scriptUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, 'media', 'main.js'));
+          panel.webview.html = getWebviewContent(styleMainUri, scriptUri);
+          panel.webview.postMessage({devices: ["sfld-300-09-01-45", "sfld-300-09-01-46", "sfld-300-09-01-47"]});
     }
 
     constructor(context: vscode.ExtensionContext) {

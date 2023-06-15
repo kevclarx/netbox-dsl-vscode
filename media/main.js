@@ -3,13 +3,27 @@
 
 (function () {
     const vscode = acquireVsCodeApi();
-    const myName = (document.getElementById('fname'));
+
+    // const myName = /** @type {HTMLElement} */ (document.getElementById('fname'));
+
+    // const mytable = /** @type {HTMLElement} */ (document.getElementById('treeview'));
 
 
 
     // Handle messages sent from the extension to the webview
     window.addEventListener('message', event => {
         const message = event.data; // The json data that the extension sent
-        myName.textContent = message.name;
+
+        console.log("These are my devices: ",message.devices)
+
+        var table = document.createElement("table");
+        for (var VAL of message.devices) { 
+            var row = table.insertRow();
+            let cell = row.insertCell();
+            cell.innerHTML = VAL; 
+        }
+        document.getElementById("treeview").appendChild(table);
+
+
     });
 }());
