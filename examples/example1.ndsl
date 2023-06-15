@@ -6,14 +6,84 @@ sites {
     slug: "as"
     region: "east"
   }
+  ch {
+    name: "Chicago"
+    slug: "ch"
+  }
+  ny {
+    name: "New York"
+    slug: "ny"
+  }
 }
 
 racks {
-  br11 { 
+  br11 {
+    name: "BR11"
+    site: $as
+    ru: "42"
+    role: "rdei-compute"
+    create: "true"
+  }
+  br12 {
+    name: "BR12"
     site: $as
     ru: "42"
     role: "rdei-compute"
     create: "true"
   }
   br122 { fetch(name="br122" site=$as) }
+}
+
+devices {
+  compute-01 {
+    name: "compute-01"
+    site: $as
+    rack: $br11
+    position: "1"
+    role: "rdei-compute"
+    create: "true"
+  }
+  compute-02 {
+    name: "compute-02"
+    site: $as
+    rack: $br11
+    position: "2"
+    role: "rdei-compute"
+    create: "true"
+  }
+  compute-03 {
+    name: "compute-03"
+    site: $as
+    rack: $br11
+    position: "3"
+    role: "rdei-compute"
+    create: "true"
+  }
+}
+
+devices {
+  compute-04 {
+    name: "compute-04"
+    site: $as
+    rack: $br12
+    position: "1"
+    role: "rdei-compute"
+    create: "true"
+  }
+  compute-05 {
+    name: "compute-05"
+    site: $as
+    rack: $br12
+    position: "2"
+    role: "rdei-compute"
+    create: "true"
+  }
+  compute-06 {
+    name: "compute-06"
+    site: $as
+    rack: $br12
+    position: "3"
+    role: "rdei-compute"
+    create: "true"
+  }
 }

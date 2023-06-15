@@ -12,6 +12,12 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "netboxdsl.parse",
+        "title": "Parse Netbox DSL"
+      }
+    ],
     "textMateLanguages": [
       {
         "scopeName": "source.netboxdsl",
@@ -31,11 +37,6 @@
         {
           "id": "netboxTree",
           "name": "Netbox"
-        },
-        {
-          "type": "webview",
-          "id": "netbox.objectView",
-          "name": "Netbox Object View"
         }
       ]
     },

@@ -1,34 +1,51 @@
 import path = require('path');
 import * as vscode from 'vscode';
 import { NetboxObjectViewProvider } from './webview';
+import { netboxDataProvider } from './netbox';
 
-export class NetboxTreeDataProvider implements vscode.TreeDataProvider<NetboxTreeItem> {
 
-    private _onDidChangeTreeData: vscode.EventEmitter<NetboxTreeItem | undefined | void> = new vscode.EventEmitter<NetboxTreeItem | undefined | void>();
-    readonly onDidChangeTreeData: vscode.Event<NetboxTreeItem | undefined | void> = this._onDidChangeTreeData.event;
+export class TreeNode extends vscode.TreeItem {
+    children: TreeNode[];
+    id: string;
+    description: string;
+  
+    constructor(label: string, description: string, id: string, collapsibleState: vscode.TreeItemCollapsibleState, children: TreeNode[] = []) {
+      super(label, collapsibleState);
+      this.id = id;
+      this.description = description;
+      this.children = children;
+    }
+  }
+
+export class TreeDataProvider implements vscode.TreeDataProvider<TreeNode> {
+    private _onDidChangeTreeData: vscode.EventEmitter<TreeNode | undefined | void> = new vscode.EventEmitter<TreeNode | undefined | void>();
+    readonly onDidChangeTreeData: vscode.Event<TreeNode | undefined | void> = this._onDidChangeTreeData.event;
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
     }
 
-    getTreeItem(element: NetboxTreeItem): vscode.TreeItem {
+    getTreeItem(element: TreeNode): vscode.TreeItem {
+        // const treeItem = new TreeNode(element.label, vscode.TreeItemCollapsibleState.Expanded, element.children);
+        // treeItem.id = element.id;
+        // treeItem.collapsibleState = element.children.length > 0 ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None;
         return element;
-    }
+      }
 
-    getChildren(element?: NetboxTreeItem): NetboxTreeItem[] | Thenable<NetboxTreeItem[]> {
-        if (element === undefined) {
-            return Promise.resolve([new NetboxTreeItem("netbox.cie.comcast.net", "server", vscode.TreeItemCollapsibleState.Collapsed)]); 
+      getChildren(element?: TreeNode): vscode.ProviderResult<TreeNode[]> {
+        if (!element) {
+          return netboxDataProvider.getTreeData();
         }
-        return Promise.resolve([new NetboxTreeItem("Comcast East", "region", vscode.TreeItemCollapsibleState.None)]);
-    }
+        return element.children;
+      }
 
-    showWebViewPanel(selection: NetboxTreeItem) {
+    showWebViewPanel(selection: TreeNode) {
         const panel = vscode.window.createWebviewPanel(
             NetboxObjectViewProvider.viewType,
             `Netbox Object Details: ${selection.label}`,
             vscode.ViewColumn.One,
             {}
-          );
+        );
     }
 
     constructor(context: vscode.ExtensionContext) {
@@ -38,13 +55,13 @@ export class NetboxTreeDataProvider implements vscode.TreeDataProvider<NetboxTre
         };
 
         vscode.window.registerTreeDataProvider('netboxTree', this);
-        const tree = vscode.window.createTreeView('netboxTree', options);
-        context.subscriptions.push(tree);
+        const treeView = vscode.window.createTreeView('netboxTree', options);
+        context.subscriptions.push(treeView);
 
         // setup: events
-        tree.onDidChangeSelection(e => {
+        treeView.onDidChangeSelection(e => {
             console.log(e);
-            this.showWebViewPanel(e.selection[0]); 
+            this.showWebViewPanel(e.selection[0]);
         });
         // tree.onDidCollapseElement(e => {
         //     console.log(e);
@@ -57,23 +74,4 @@ export class NetboxTreeDataProvider implements vscode.TreeDataProvider<NetboxTre
         // });
     }
 
-}
-
-export class NetboxTreeItem extends vscode.TreeItem {
-    constructor(
-        public readonly label: string,
-        public readonly description: string,
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-        public readonly command?: vscode.Command
-    ) {
-        super(label, collapsibleState);
-        this.tooltip = this.description;
-    }
-
-    iconPath = {
-        light: path.join(__filename, '..', '..', 'resources', 'light', 'dependency.svg'),
-        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'dependency.svg')
-    };
-
-    contextValue = 'node';
 }

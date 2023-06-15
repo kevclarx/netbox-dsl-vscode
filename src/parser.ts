@@ -1,5 +1,6 @@
 import { Token, TokenType } from './lexer';
-import { NetboxModel, RackModel, SiteModel } from './models';
+import { DeviceModel, RackModel, SiteModel } from './models';
+import { netboxDataProvider } from './netbox';
 import { symbols } from './symbols';
 
 // Example dsl syntax
@@ -13,11 +14,11 @@ import { symbols } from './symbols';
 
 //   racks {
 //     br11: { 
-//       site: "as"
+//       site: $as
 //       region: "east"
-//       ru: 42
+//       ru: "42"
 //       role: "rdei-compute"
-//       create: true 
+//       create: "true" 
 //     }
 //     br122: fetch(name='br121')
 //   }
@@ -115,7 +116,7 @@ export class Parser {
     }
 
     public parse(): void {
-        const validTopLevelIdentifiers = ["sites", "racks"];
+        const validTopLevelIdentifiers = ["sites", "racks", "devices"];
 
         this.advance();
         while (this.currentToken) {
@@ -131,14 +132,61 @@ export class Parser {
                         if (symbol === undefined) {
                             throw new SyntaxError(`parser: Missing symbol for object`);
                         }
+                        let parentNode:string|undefined;
                         switch (identifier) {
                             case "sites":
                                 const site = new SiteModel(obj);
                                 symbols.addSite(symbol, site);
+                                // insert the site node into the tree
+                                netboxDataProvider.insertNode(site.properties.get("name"), "site", site.treeId, "0");
                                 break;
                             case "racks":
                                 const rack = new RackModel(obj);
                                 symbols.addRack(symbol, rack);
+                                // find the parent node for this rack
+                                if (rack.properties.get("name") === undefined) {
+                                    break;
+                                }
+                                let rackSite = rack.properties.get("site");
+                                if (rackSite === undefined) {
+                                    parentNode = undefined;
+                                } else {
+                                    // if the site is a reference, then find the site model in the symbol table and get the treeId
+                                    if (rackSite.startsWith("$")) {
+                                        let rackSiteModel = symbols.getSite(rackSite.substring(1));
+                                        if (rackSiteModel === undefined) { 
+                                            parentNode = undefined;
+                                        } else {
+                                            parentNode = rackSiteModel.treeId;
+                                        }
+                                    }
+                                }
+                                // insert the rack node into the tree
+                                netboxDataProvider.insertNode(rack.properties.get("name"), "rack", rack.treeId, parentNode);
+                                break;
+                            case "devices":
+                                const device = new DeviceModel(obj);
+                                symbols.addRack(symbol, device);
+                                // find the parent node for this device
+                                if (device.properties.get("name") === undefined) {
+                                    break;
+                                }
+                                let deviceRack = device.properties.get("rack");
+                                if (deviceRack === undefined) {
+                                    parentNode = undefined;
+                                } else {
+                                    // if the rack is a reference, then find the rack model in the symbol table and get the treeId
+                                    if (deviceRack.startsWith("$")) {
+                                        let deviceRackModel = symbols.getRack(deviceRack.substring(1));
+                                        if (deviceRackModel === undefined) { 
+                                            parentNode = undefined;
+                                        } else {
+                                            parentNode = deviceRackModel.treeId;
+                                        }
+                                    }
+                                }
+                                // insert the device node into the tree
+                                netboxDataProvider.insertNode(device.properties.get("name"), "device", device.treeId, parentNode);
                                 break;
                         }
                     }

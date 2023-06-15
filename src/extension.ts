@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
 
-import { NetboxTreeDataProvider } from './treeview';
+import { TreeDataProvider } from './treeview';
 import { NetboxObjectViewProvider } from './webview';
 import { Parser } from './parser';
 import { Lexer, Token } from './lexer';
 import { symbols } from './symbols';
+import { netboxDataProvider } from './netbox';
 
 
 // This method is called when your extension is activated
@@ -19,14 +20,21 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	// TreeView
-	new NetboxTreeDataProvider(context);
+	const treeDataProvider: TreeDataProvider = new TreeDataProvider(context);
+	netboxDataProvider.setTreeProvider(treeDataProvider);
 
-	const editor = vscode.window.activeTextEditor;
-	if (editor) {
+	// Commands
+	const command = 'netboxdsl.parse';
+	const commandParseHandler = () => {
+		const activeEditor = vscode.window.activeTextEditor;
+		if (!activeEditor) {
+			return;
+		}
+		netboxDataProvider.clear();
 		const lexer = new Lexer();
 		let tokens: Token[] | undefined;
 		try {
-			let tokens = lexer.tokenize(editor.document.getText());
+			let tokens = lexer.tokenize(activeEditor.document.getText());
 			console.log(tokens);
 			const parser = new Parser(tokens);
 			parser.parse();
@@ -34,9 +42,11 @@ export function activate(context: vscode.ExtensionContext) {
 			let message = 'Unknown Error';
 			if (e instanceof Error) { message = e.message; }
 			console.log(message);
+			vscode.window.showErrorMessage(message);
 		}
 		console.log(symbols);
-	}
+	};
+	context.subscriptions.push(vscode.commands.registerCommand(command, commandParseHandler));
 }
 
 // This method is called when your extension is deactivated

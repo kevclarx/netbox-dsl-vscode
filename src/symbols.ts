@@ -1,13 +1,21 @@
-import { RackModel, SiteModel } from "./models";
+import { RackModel, SiteModel, DeviceModel } from "./models";
 
 
 class SymbolTable {
-    private sitesMap: Map<string, SiteModel>;
-    private racksMap: Map<string, RackModel>;
+    public sitesMap: Map<string, SiteModel>;
+    public racksMap: Map<string, RackModel>;
+    public devicesMap: Map<string, DeviceModel>;
 
     constructor() {
         this.sitesMap = new Map<string,SiteModel>();
         this.racksMap = new Map<string,RackModel>();
+        this.devicesMap = new Map<string,DeviceModel>();
+    }
+
+    clear(): void {
+        this.sitesMap = new Map<string,SiteModel>();
+        this.racksMap = new Map<string,RackModel>();
+        this.devicesMap = new Map<string,DeviceModel>();
     }
 
     public addSite(symbol: string, site: SiteModel): void {
@@ -25,6 +33,15 @@ class SymbolTable {
     public getRack(symbol: string): RackModel | undefined {
         return this.racksMap.get(symbol);
     }
+
+    public addDevice(symbol: string, device: DeviceModel): void {
+        this.devicesMap.set(symbol, device);
+    }
+
+    public getDevice(symbol: string): DeviceModel | undefined {
+        return this.devicesMap.get(symbol);
+    }
+
 }
 
 export var symbols: SymbolTable = new SymbolTable();
