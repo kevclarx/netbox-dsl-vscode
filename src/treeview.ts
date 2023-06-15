@@ -1,6 +1,6 @@
 import path = require('path');
 import * as vscode from 'vscode';
-import { NetboxObjectViewProvider } from './webview';
+import { getWebviewContent } from './webview';
 
 export class NetboxTreeDataProvider implements vscode.TreeDataProvider<NetboxTreeItem> {
 
@@ -22,13 +22,20 @@ export class NetboxTreeDataProvider implements vscode.TreeDataProvider<NetboxTre
         return Promise.resolve([new NetboxTreeItem("Comcast East", "region", vscode.TreeItemCollapsibleState.None)]);
     }
 
-    showWebViewPanel(selection: NetboxTreeItem) {
+    showWebViewPanel(selection: NetboxTreeItem, context: vscode.ExtensionContext) {
         const panel = vscode.window.createWebviewPanel(
-            NetboxObjectViewProvider.viewType,
+            "netboxObjectView",
             `Netbox Object Details: ${selection.label}`,
             vscode.ViewColumn.One,
-            {}
+            {
+                enableScripts: true,
+                retainContextWhenHidden: true
+            }
           );
+
+          const styleMainUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, 'media', 'main.css'));
+          panel.webview.html = getWebviewContent(styleMainUri);
+          panel.webview.postMessage({name: "jermaine"});
     }
 
     constructor(context: vscode.ExtensionContext) {
@@ -44,7 +51,7 @@ export class NetboxTreeDataProvider implements vscode.TreeDataProvider<NetboxTre
         // setup: events
         tree.onDidChangeSelection(e => {
             console.log(e);
-            this.showWebViewPanel(e.selection[0]); 
+            this.showWebViewPanel(e.selection[0], context); 
         });
         // tree.onDidCollapseElement(e => {
         //     console.log(e);
