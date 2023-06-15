@@ -72,7 +72,7 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeNode> {
         if (rackName !== undefined) {
           rackDevices = netboxDataProvider.getDevicesByRackName(rackName);
         }
-        console.log("rack devices: ", rackDevices)
+        console.log("rack devices: ", rackDevices);
         panel.webview.postMessage({ data: obj, props: props, devices: rackDevices });
         break;
       case "device":
