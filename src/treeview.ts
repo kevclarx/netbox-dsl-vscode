@@ -68,7 +68,14 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeNode> {
     const styleMainUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, 'media', 'main.css'));
     const scriptUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, 'media', 'main.js'));
     panel.webview.html = getWebviewContent(styleMainUri, scriptUri);
-    panel.webview.postMessage({ data: obj });
+
+    const jsonObject: { [key: string]: string } = {};
+    obj.properties.forEach((value, key) => {
+      jsonObject[key] = value;
+    });
+    const jsonString = JSON.stringify(jsonObject);
+    console.log("props json: ", jsonString);
+    panel.webview.postMessage({ data: obj, props: jsonString });
   }
 
   constructor(context: vscode.ExtensionContext) {
