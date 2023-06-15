@@ -37,6 +37,19 @@ export class Lexer {
         }
     }
 
+    // skip comments of format // until the end of the line
+    private skipComments(): void {
+        if (this.position + 1 >= this.input.length) {
+            return;
+        }
+        if (this.currentChar === "/" && this.input.charAt(this.position + 1) === "/") {
+            while (this.currentChar !== null && this.input.charAt(this.position) !== "\n") {
+                this.advance();
+            }
+        }
+        this.skipWhitespace();
+    }
+
     // return the next token in the input string
     private getNextToken(): Token | null {
         while (this.currentChar !== null) {
@@ -107,7 +120,7 @@ export class Lexer {
                 const startChar = this.charPosition;
                 while (
                     this.currentChar !== null &&
-                    (/\w/.test(this.currentChar)  || this.currentChar === "$")
+                    (/\w/.test(this.currentChar) || this.currentChar === "$")
                 ) {
                     reference += this.currentChar;
                     this.advance();
@@ -173,10 +186,12 @@ export class Lexer {
         this.currentChar = this.input.charAt(0);
         const tokens: Token[] = [];
         this.skipWhitespace();
+        this.skipComments();
         let token = this.getNextToken();
         while (token !== null) {
             tokens.push(token);
             this.skipWhitespace();
+            this.skipComments();
             token = this.getNextToken();
         }
         console.log(`finished lexing, found ${tokens.length} tokens`);
@@ -193,9 +208,9 @@ export class TokenType {
     public static readonly reference = new TokenType("Reference");
     public static readonly string = new TokenType("String");
     public static readonly filter = new TokenType("Filter");
-  
-    private constructor(public readonly value: string) {}
-  }
+
+    private constructor(public readonly value: string) { }
+}
 
 // a token is a single "word" in the dsl
 export class Token {

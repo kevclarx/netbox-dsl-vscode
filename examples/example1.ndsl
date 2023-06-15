@@ -1,8 +1,8 @@
 
-
+// list of all our sites
 sites {
   as {
-    name: "Ashburn NDC"
+    name: "Ashburn NDC" // our servers go here
     slug: "as"
     region: "east"
   }
