@@ -22,22 +22,24 @@
         }
       }
     ],
-    "textMateLanguages": [
-      {
-        "scopeName": "source.netboxdsl",
-        "path": "./syntaxes/netboxdsl.tmLanguage.json"
-      }
-    ],
     "languages": [
       {
         "id": "netboxdsl",
         "aliases": [
-          "Netbox DSL"
+          "Netbox DSL",
+          "netboxdsl"
         ],
         "extensions": [
           ".ndsl"
         ],
         "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "netboxdsl",
+        "scopeName": "source.netboxdsl",
+        "path": "./syntaxes/netboxdsl.tmLanguage.json"
       }
     ],
     "views": {

@@ -1,70 +1,65 @@
 {
-    "name": "Netbox DSL",
-    "scopeName": "source.netboxdsl",
-    "fileTypes": ["ndsl"],
-    "patterns": [
-      {
-        "include": "#comments"
-      },
-      {
-        "include": "#entities"
-      },
-      {
-        "include": "#strings"
-      },
-      {
-        "include": "#brackets"
-      }
-    ],
-    "repository": {
-      "comments": {
-        "patterns": [
-          {
-            "name": "comment.line.double-slash.netboxdsl",
-            "match": "//.*$"
-          },
-          {
-            "name": "comment.block.netboxdsl",
-            "begin": "/\\*",
-            "end": "\\*/"
-          }
-        ]
-      },
-      "entities": {
-        "patterns": [
-          {
-            "name": "entity.key.netboxdsl",
-            "match": "\\b(\\w+)\\b(?=\\s*:)"
-          },
-          {
-            "name": "entity.value.netboxdsl",
-            "match": "(?<=\\b\\w+\\b\\s*:\\s*)[^\\s]+"
-          }
-        ]
-      },
-      "strings": {
-        "patterns": [
-          {
-            "name": "string.quoted.double.netboxdsl",
-            "begin": "\"",
-            "end": "\"",
-            "patterns": [
-              {
-                "name": "constant.character.escape.netboxdsl",
-                "match": "\\\\."
-              }
-            ]
-          }
-        ]
-      },
-      "brackets": {
-        "patterns": [
-          {
-            "name": "punctuation.bracket.curly.netboxdsl",
-            "match": "\\{|\\}"
-          }
-        ]
-      }
+  "name": "netboxdsl",
+  "scopeName": "source.netboxdsl",
+  "fileTypes": [".ndsl"],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#variable-declarations"
+    },
+    {
+      "include": "#variables"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "match": "//.*$",
+          "name": "comment"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "match": "\\b(sites|racks|devices)\\b",
+          "name": "keyword"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "string"
+        }
+      ]
+    },
+    "variable-declarations": {
+      "patterns": [
+        {
+          "match": "\\b\\w+\\s(?=\\{)",
+          "name": "variable.declaration"
+        }
+      ]
+    },
+    "variables": {
+      "patterns": [
+        {
+          "match": "\\$\\w+",
+          "name": "variable"
+        }
+      ]
     }
   }
-  
+}
