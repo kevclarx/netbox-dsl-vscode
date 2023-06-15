@@ -68,7 +68,7 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeNode> {
         obj = netboxDataProvider.getRack(selection.symbol);
         props = this.propsStringify(obj.properties);
         const rackName = obj.properties.get("name");
-        let rackDevices: string[] = [];
+        let rackDevices: { name:string, position: number}[] = [];
         if (rackName !== undefined) {
           rackDevices = netboxDataProvider.getDevicesByRackName(rackName);
         }

@@ -38,11 +38,11 @@ export class NetboxDataProvider {
         return symbols.getDevice(symbol);
     }
 
-    getDevicesByRackName(rackName: string): string[] {
-        const devices: string[] = [];
+    getDevicesByRackName(rackName: string): { name:string, position: number}[] {
+        const devices: { name:string, position: number}[] = [];
         symbols.devicesMap.forEach((device, symbol) => {
             if (device.properties.get("rack") === rackName) {
-                devices.push(symbol);
+                devices.push({ name: device.properties.get("name") || "", position: parseInt(device.properties.get("position") || "0") });
             }
         });
         return devices;
