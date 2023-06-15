@@ -135,13 +135,13 @@ export class Parser {
                         let parentNode:string|undefined;
                         switch (identifier) {
                             case "sites":
-                                const site = new SiteModel(obj);
+                                const site = new SiteModel(obj, symbol);
                                 symbols.addSite(symbol, site);
                                 // insert the site node into the tree
-                                netboxDataProvider.insertNode(site.properties.get("name"), "site", site.treeId, "0");
+                                netboxDataProvider.insertNode(site.properties.get("name"), "site", site.treeId, symbol,  "0");
                                 break;
                             case "racks":
-                                const rack = new RackModel(obj);
+                                const rack = new RackModel(obj, symbol);
                                 symbols.addRack(symbol, rack);
                                 // find the parent node for this rack
                                 if (rack.properties.get("name") === undefined) {
@@ -162,10 +162,10 @@ export class Parser {
                                     }
                                 }
                                 // insert the rack node into the tree
-                                netboxDataProvider.insertNode(rack.properties.get("name"), "rack", rack.treeId, parentNode);
+                                netboxDataProvider.insertNode(rack.properties.get("name"), "rack", rack.treeId, symbol, parentNode);
                                 break;
                             case "devices":
-                                const device = new DeviceModel(obj);
+                                const device = new DeviceModel(obj, symbol);
                                 symbols.addRack(symbol, device);
                                 // find the parent node for this device
                                 if (device.properties.get("name") === undefined) {
@@ -186,7 +186,7 @@ export class Parser {
                                     }
                                 }
                                 // insert the device node into the tree
-                                netboxDataProvider.insertNode(device.properties.get("name"), "device", device.treeId, parentNode);
+                                netboxDataProvider.insertNode(device.properties.get("name"), "device", device.treeId, symbol, parentNode);
                                 break;
                         }
                     }

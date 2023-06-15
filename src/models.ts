@@ -4,6 +4,7 @@
 export interface NetboxModel {
     type: string;
     treeId: string;
+    symbol?: string;
     requiredProperties: string[];
     validProperties?: string[]; // todo: add all valid property names from netbox api into this list for pre-validation
     properties: Record<string, any>;
@@ -12,14 +13,16 @@ export interface NetboxModel {
 export class SiteModel implements NetboxModel {
     public type: string;
     public treeId: string;
+    public symbol: string;
     public requiredProperties: string[];
     public properties: Record<string, any>;
 
-    constructor(props: Record<string, any>) {
+    constructor(props: Record<string, any>, symbol: string) {
         this.type = "site";
         this.treeId = Date.now().toString();
         this.requiredProperties = ["name", "slug"];
         this.properties = props;
+        this.symbol = symbol;
     }
 }
 
@@ -28,12 +31,14 @@ export class RackModel implements NetboxModel {
     public treeId: string;
     public requiredProperties: string[];
     public properties: Record<string, any>;
+    public symbol: string;
 
-    constructor(props: Record<string, any>) {
+    constructor(props: Record<string, any>, symbol: string) {
         this.type = "rack";
         this.treeId = Date.now().toString();
         this.requiredProperties = ["site", "name", "status", "width", "u_height"];
         this.properties = props;
+        this.symbol = symbol;
     }
 }
 
@@ -42,13 +47,15 @@ export class DeviceModel implements NetboxModel {
     public treeId: string;
     public requiredProperties: string[];
     public properties: Record<string, any>;
+    public symbol: string;
     public interfaces: InterfaceModel[];
 
-    constructor(props: Record<string, any>) {
+    constructor(props: Record<string, any>, symbol: string) {
         this.type = "device";
         this.treeId = Date.now().toString();
         this.requiredProperties = ["role", "devicetype", "site", "status"];
         this.properties = props;
+        this.symbol = symbol;
         this.interfaces = [];
     }
 }
@@ -58,12 +65,14 @@ export class DeviceRoleModel implements NetboxModel {
     public treeId: string;
     public requiredProperties: string[];
     public properties: Record<string, any>;
+    public symbol: string;
 
-    constructor(props: Record<string, any>) {
+    constructor(props: Record<string, any>, symbol: string) {
         this.type = "devicerole";
         this.treeId = Date.now().toString();
         this.requiredProperties = ["name", "slug", "color"];
         this.properties = props;
+        this.symbol = symbol;
     }
 }
 

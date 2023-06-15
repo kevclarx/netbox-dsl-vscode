@@ -8,7 +8,7 @@ export class NetboxDataProvider {
 
     constructor() {
         this.tree = [];
-        this.insertNode("Sites", "All Sites", "0", undefined);
+        this.insertNode("Sites", "All Sites", "0", "", undefined);
     }
 
     setTreeProvider(treeDataProvider: TreeDataProvider): void {
@@ -17,7 +17,7 @@ export class NetboxDataProvider {
 
     clear(): void {
         this.tree = [];
-        this.insertNode("Sites", "All Sites", "0", undefined);
+        this.insertNode("Sites", "All Sites", "0", "", undefined);
         symbols.clear();
         this.refresh();
     }
@@ -26,12 +26,25 @@ export class NetboxDataProvider {
         return this.tree;
     }
 
-    insertNode(label: string, description: string, id: string, parentId?: string): void {
+    getSite(symbol: string): any {
+        return symbols.getSite(symbol);
+    }
+
+    getRack(symbol: string): any {
+        return symbols.getRack(symbol);
+    }
+
+    getDevice(symbol: string): any {
+        return symbols.getDevice(symbol);
+    }
+
+    insertNode(label: string, description: string, id: string, symbol: string, parentId?: string): void {
         console.log(`insertNode: label: "${label}" description: "${description}" parent: "${parentId}"`);
         const newNode: TreeNode = {
             label: label,
             description: description,
             id: id,
+            symbol: symbol,
             collapsibleState: vscode.TreeItemCollapsibleState.Expanded,
             children: [],
         };

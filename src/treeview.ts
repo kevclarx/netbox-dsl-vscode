@@ -2,18 +2,21 @@ import path = require('path');
 import * as vscode from 'vscode';
 import { NetboxObjectViewProvider } from './webview';
 import { netboxDataProvider } from './netbox';
+import { NetboxModel } from './models';
 
 
 export class TreeNode extends vscode.TreeItem {
     children: TreeNode[];
     id: string;
+    symbol: string;
     description: string;
   
-    constructor(label: string, description: string, id: string, collapsibleState: vscode.TreeItemCollapsibleState, children: TreeNode[] = []) {
+    constructor(label: string, description: string, id: string, symbol: string, collapsibleState: vscode.TreeItemCollapsibleState, children: TreeNode[] = []) {
       super(label, collapsibleState);
       this.id = id;
       this.description = description;
       this.children = children;
+      this.symbol = symbol;
     }
   }
 
@@ -40,12 +43,27 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeNode> {
       }
 
     showWebViewPanel(selection: TreeNode) {
+        var obj: NetboxModel;
+        switch (selection.description) {
+            case "site":
+                obj = netboxDataProvider.getSite(selection.symbol);
+                break;
+            case "rack":
+                obj = netboxDataProvider.getRack(selection.symbol);
+                break;
+            case "device":
+                obj = netboxDataProvider.getDevice(selection.symbol);
+                break;
+            default:
+                return;
+        }
         const panel = vscode.window.createWebviewPanel(
-            NetboxObjectViewProvider.viewType,
-            `Netbox Object Details: ${selection.label}`,
-            vscode.ViewColumn.One,
-            {}
-        );
+          NetboxObjectViewProvider.viewType,
+          `Netbox Object Details: ${selection.label}`,
+          vscode.ViewColumn.One,
+          {}
+      );
+      panel.webview.postMessage({ data: obj });
     }
 
     constructor(context: vscode.ExtensionContext) {
