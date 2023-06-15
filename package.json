@@ -15,7 +15,11 @@
     "commands": [
       {
         "command": "netboxdsl.parse",
-        "title": "Parse Netbox DSL"
+        "title": "Parse Netbox DSL",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
       }
     ],
     "textMateLanguages": [
@@ -27,8 +31,12 @@
     "languages": [
       {
         "id": "netboxdsl",
-        "aliases": ["Netbox DSL"],
-        "extensions": [".ndsl"],
+        "aliases": [
+          "Netbox DSL"
+        ],
+        "extensions": [
+          ".ndsl"
+        ],
         "configuration": "./language-configuration.json"
       }
     ],
@@ -37,6 +45,15 @@
         {
           "id": "netboxTree",
           "name": "Netbox"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "netboxdsl.parse",
+          "group": "navigation",
+          "when": "view == netboxTree"
         }
       ]
     },

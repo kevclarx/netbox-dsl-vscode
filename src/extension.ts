@@ -40,6 +40,14 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log(symbols);
 	};
 	context.subscriptions.push(vscode.commands.registerCommand(command, commandParseHandler));
+
+	// Create the refresh button
+	const refreshButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+	refreshButton.text = "$(sync) Refresh Tree View";
+	refreshButton.command = 'netboxdsl.parse';
+	refreshButton.show();
+
+	vscode.commands.executeCommand(command);
 }
 
 // This method is called when your extension is deactivated
