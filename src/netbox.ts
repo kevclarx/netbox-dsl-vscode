@@ -38,6 +38,16 @@ export class NetboxDataProvider {
         return symbols.getDevice(symbol);
     }
 
+    getDevicesByRackName(rackName: string): string[] {
+        const devices: string[] = [];
+        symbols.devicesMap.forEach((device, symbol) => {
+            if (device.properties.get("rack") === rackName) {
+                devices.push(symbol);
+            }
+        });
+        return devices;
+    }
+
     insertNode(label: string, description: string, id: string, symbol: string, parentId?: string): void {
         console.log(`insertNode: label: "${label}" description: "${description}" parent: "${parentId}"`);
         const newNode: TreeNode = {

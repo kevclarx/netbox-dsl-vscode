@@ -42,20 +42,6 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeNode> {
   }
 
   showWebViewPanel(selection: TreeNode, context: vscode.ExtensionContext) {
-    var obj: NetboxModel;
-    switch (selection.description) {
-      case "site":
-        obj = netboxDataProvider.getSite(selection.symbol);
-        break;
-      case "rack":
-        obj = netboxDataProvider.getRack(selection.symbol);
-        break;
-      case "device":
-        obj = netboxDataProvider.getDevice(selection.symbol);
-        break;
-      default:
-        return;
-    }
     const panel = vscode.window.createWebviewPanel(
       "netboxObjectView",
       `Netbox Object Details: ${selection.label}`,
@@ -69,13 +55,45 @@ export class TreeDataProvider implements vscode.TreeDataProvider<TreeNode> {
     const scriptUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, 'media', 'main.js'));
     panel.webview.html = getWebviewContent(styleMainUri, scriptUri);
 
-    const jsonObject: { [key: string]: string } = {};
-    obj.properties.forEach((value, key) => {
-      jsonObject[key] = value;
+    // get netbox models
+    var obj: NetboxModel;
+    var props: string;
+    switch (selection.description) {
+      case "site":
+        obj = netboxDataProvider.getSite(selection.symbol);
+        props = this.propsStringify(obj.properties);
+        panel.webview.postMessage({ data: obj, props: props });
+        break;
+      case "rack":
+        obj = netboxDataProvider.getRack(selection.symbol);
+        props = this.propsStringify(obj.properties);
+        const rackName = obj.properties.get("name");
+        let rackDevices: string[] = [];
+        if (rackName !== undefined) {
+          rackDevices = netboxDataProvider.getDevicesByRackName(rackName);
+        }
+        console.log("rack devices: ", rackDevices)
+        panel.webview.postMessage({ data: obj, props: props, devices: rackDevices });
+        break;
+      case "device":
+        obj = netboxDataProvider.getDevice(selection.symbol);
+        props = this.propsStringify(obj.properties);
+        panel.webview.postMessage({ data: obj, props: props });
+        break;
+      default:
+        return;
+    }
+  }
+
+  // convert Map<string, string> to JSON string so it can be serialized and passed to webview
+  propsStringify(props: Map<string, string>): string {
+    const propsJsonObject: { [key: string]: string } = {};
+    props.forEach((value, key) => {
+      propsJsonObject[key] = value;
     });
-    const jsonString = JSON.stringify(jsonObject);
-    console.log("props json: ", jsonString);
-    panel.webview.postMessage({ data: obj, props: jsonString });
+    const propsJsonString = JSON.stringify(propsJsonObject);
+    console.log("props json: ", propsJsonString);
+    return propsJsonString;
   }
 
   constructor(context: vscode.ExtensionContext) {

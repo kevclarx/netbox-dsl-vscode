@@ -161,6 +161,7 @@ export class Parser {
                                         if (rackSiteModel === undefined) { 
                                             parentNode = undefined;
                                         } else {
+                                            rack.properties.set("site", rackSiteModel.properties.get("name") as string);
                                             parentNode = rackSiteModel.treeId;
                                         }
                                     }
@@ -174,11 +175,11 @@ export class Parser {
                                 break;
                             case "devices":
                                 const device = new DeviceModel(obj, symbol);
-                                symbols.addDevice(symbol, device);
                                 // find the parent node for this device
                                 if (device.properties.get("name") === undefined) {
                                     break;
                                 }
+                                // replace references with actual values
                                 let deviceRack = device.properties.get("rack");
                                 if (deviceRack === undefined) {
                                     parentNode = undefined;
@@ -189,8 +190,16 @@ export class Parser {
                                         if (deviceRackModel === undefined) { 
                                             parentNode = undefined;
                                         } else {
+                                            device.properties.set("rack", deviceRackModel.properties.get("name") as string);
                                             parentNode = deviceRackModel.treeId;
                                         }
+                                    }
+                                }
+                                let deviceSite = device.properties.get("site");
+                                if (deviceSite !== undefined && deviceSite.startsWith("$")) {
+                                    let deviceSiteModel = symbols.getSite(deviceSite.substring(1));
+                                    if (deviceSiteModel !== undefined) {
+                                        device.properties.set("site", deviceSiteModel.properties.get("name") as string);
                                     }
                                 }
                                 // insert the device node into the tree
@@ -198,6 +207,7 @@ export class Parser {
                                 if (deviceName === undefined) {
                                     break;
                                 }
+                                symbols.addDevice(symbol, device);
                                 netboxDataProvider.insertNode(deviceName, "device", device.treeId, symbol, parentNode);
                                 break;
                         }
