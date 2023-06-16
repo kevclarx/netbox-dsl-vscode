@@ -1,5 +1,6 @@
 {
-  "name": "netboxdsl",
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Netbox DSL",
   "scopeName": "source.netboxdsl",
   "fileTypes": [".ndsl"],
   "patterns": [
@@ -7,59 +8,66 @@
       "include": "#comments"
     },
     {
+      "include": "#variables"
+    },
+    {
+      "include": "#variableDeclarations"
+    },
+    {
       "include": "#keywords"
     },
     {
       "include": "#strings"
-    },
-    {
-      "include": "#variable-declarations"
-    },
-    {
-      "include": "#variables"
     }
   ],
   "repository": {
     "comments": {
       "patterns": [
         {
-          "match": "//.*$",
-          "name": "comment"
-        }
-      ]
-    },
-    "keywords": {
-      "patterns": [
-        {
-          "match": "\\b(sites|racks|devices)\\b",
-          "name": "keyword"
-        }
-      ]
-    },
-    "strings": {
-      "patterns": [
-        {
-          "begin": "\"",
-          "end": "\"",
-          "name": "string"
-        }
-      ]
-    },
-    "variable-declarations": {
-      "patterns": [
-        {
-          "match": "\\b\\w+\\s(?=\\{)",
-          "name": "variable.declaration"
+          "name": "comment.line.double-slash.netboxdsl",
+          "match": "//.*$"
         }
       ]
     },
     "variables": {
       "patterns": [
         {
-          "match": "\\$\\w+",
-          "name": "variable"
+          "name": "variable.other.dollar-sign.netboxdsl",
+          "match": "\\$[a-zA-Z_][a-zA-Z0-9_]*"
+        }
+      ]
+    },
+    "variableDeclarations": {
+      "patterns": [
+        {
+          "name": "variable.declaration.netboxdsl",
+          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\s+\\{"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.netboxdsl",
+          "match": "\\b(racks|devices|sites|interfaces|cables)\\b"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.netboxdsl",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.netboxdsl",
+              "match": "\\\\(?:[\"\\\\/bfnrt]|u[\\da-fA-F]{4})"
+            }
+          ]
         }
       ]
     }
   }
+  
 }

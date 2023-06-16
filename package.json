@@ -35,11 +35,19 @@
         "configuration": "./language-configuration.json"
       }
     ],
+    "themes": [
+      {
+        "label": "Netbox DSL Theme Light",
+        "uiTheme": "vs",
+        "path": "themes/netboxdsl.tmTheme"
+      }
+    ],
     "grammars": [
       {
         "language": "netboxdsl",
         "scopeName": "source.netboxdsl",
-        "path": "./syntaxes/netboxdsl.tmLanguage.json"
+        "path": "./syntaxes/netboxdsl.tmLanguage.json",
+        "injectTo": ["text/plain"]
       }
     ],
     "views": {
@@ -58,14 +66,7 @@
           "when": "view == netboxTree"
         }
       ]
-    },
-    "textDocumentContentProviders": [
-      {
-        "scheme": "netboxdsl",
-        "language": "netboxdsl",
-        "pattern": "**/*.ndsl"
-      }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

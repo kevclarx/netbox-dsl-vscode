@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+  <dict>
+    <key>name</key>
+    <string>Netbox DSL Theme</string>
+    <key>settings</key>
+    <array>
+      <dict>
+        <key>scope</key>
+        <string>variable.other.dollar-sign.netboxdsl</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#FF0000</string>
+        </dict>
+      </dict>
+      <dict>
+        <key>scope</key>
+        <string>variable.declaration.netboxdsl</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#0000FF</string>
+        </dict>
+      </dict>
+      <dict>
+        <key>name</key>
+        <string>Background</string>
+        <key>scope</key>
+        <string>source.netboxdsl</string>
+        <key>settings</key>
+        <dict>
+          <key>background</key>
+          <string>#000000</string>
+        </dict>
+      </dict>
+    </array>
+  </dict>
+</plist>
